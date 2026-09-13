@@ -1,0 +1,12 @@
+# IDE 配置
+.idea/
+.vscode/
+.trae/
+*.iml
+
+# 系统文件
+Thumbs.db
+.DS_Store
+
+# 运行临时文件
+*.log
