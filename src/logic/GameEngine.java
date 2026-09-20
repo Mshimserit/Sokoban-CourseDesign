@@ -39,6 +39,7 @@ public class GameEngine {
     private long elapsedTime; // 已用时间（毫秒）
     private boolean gameStarted; // 游戏是否开始
     private boolean gameCompleted; // 游戏是否完成
+    private boolean deadlockDetected; // 是否检测到死局
     private List<int[][]> mapHistory; // 地图状态历史（用于撤销）
     private List<Integer> stepsHistory; // 步数历史
     private Level currentLevel; // 当前关卡
@@ -65,7 +66,8 @@ public class GameEngine {
         this.startTime = 0;
         this.elapsedTime = 0;
         this.gameStarted = false;
-        this.gameCompleted = false;
+        this.gameCompleted = gameMap.isCompleted();
+        this.deadlockDetected = false;
         this.mapHistory.clear();
         this.stepsHistory.clear();
     }
@@ -157,6 +159,11 @@ public class GameEngine {
             elapsedTime = System.currentTimeMillis() - startTime;
         }
 
+        // 检查是否出现死局（仅在推箱子后检测）
+        if (pushingBox && gameMap.isDeadlock()) {
+            deadlockDetected = true;
+        }
+
         return true;
     }
 
@@ -175,6 +182,7 @@ public class GameEngine {
         gameMap = new GameMap(previousMap);
         steps = stepsHistory.remove(stepsHistory.size() - 1);
         gameCompleted = false;
+        deadlockDetected = false; // 撤销后清除死局标记
 
         return true;
     }
@@ -207,6 +215,22 @@ public class GameEngine {
 
     public boolean isGameCompleted() {
         return gameCompleted;
+    }
+
+    /**
+     * 检查是否检测到死局
+     * 
+     * @return 是否检测到死局
+     */
+    public boolean isDeadlockDetected() {
+        return deadlockDetected;
+    }
+
+    /**
+     * 清除死局标记（用于撤销后）
+     */
+    public void clearDeadlock() {
+        this.deadlockDetected = false;
     }
 
     public Level getCurrentLevel() {

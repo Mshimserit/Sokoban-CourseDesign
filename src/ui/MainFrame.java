@@ -306,6 +306,17 @@ public class MainFrame extends JFrame {
             // 检查是否通关
             if (gameEngine.isGameCompleted()) {
                 handleLevelComplete();
+            } else if (gameEngine.isDeadlockDetected()) {
+                // 检测到死局，提示用户
+                int result = JOptionPane.showConfirmDialog(this,
+                        "箱子被推到角落，无法继续！\n是否重新开始本关？",
+                        "死局提示",
+                        JOptionPane.YES_NO_OPTION,
+                        JOptionPane.WARNING_MESSAGE);
+                if (result == JOptionPane.YES_OPTION) {
+                    resetLevel();
+                }
+                gameEngine.clearDeadlock(); // 清除死局标记
             }
         }
     }

@@ -164,4 +164,58 @@ public class GameMap {
     public void refresh() {
         analyzeMap();
     }
+
+    /**
+     * 检测是否存在死局（箱子被推到角落且不在目标点上）
+     * 死局定义：箱子在角落（至少两个相邻方向是墙）且不在目的地上
+     * @return 是否存在死局
+     */
+    public boolean isDeadlock() {
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                int element = map[y][x];
+                // 只检查普通箱子（2），箱子在目的地（5）不算死局
+                if (element == 2) {
+                    if (isCornerDeadlock(x, y)) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 检查指定位置是否是角落死局
+     * 角落定义：至少有两个相邻方向（上下或左右）被墙封死
+     * @param x X坐标
+     * @param y Y坐标
+     * @return 是否是角落死局
+     */
+    private boolean isCornerDeadlock(int x, int y) {
+        boolean wallUp = getElement(x, y - 1) == 1;
+        boolean wallDown = getElement(x, y + 1) == 1;
+        boolean wallLeft = getElement(x - 1, y) == 1;
+        boolean wallRight = getElement(x + 1, y) == 1;
+
+        // 角落：上下+左 或 上下+右 或 左右+上 或 左右+下
+        return (wallUp && wallLeft) || (wallUp && wallRight) ||
+               (wallDown && wallLeft) || (wallDown && wallRight);
+    }
+
+    /**
+     * 获取死局箱子的位置列表（用于调试或高亮显示）
+     * @return 死局箱子位置数组，每个元素为 [x, y]
+     */
+    public int[][] getDeadlockBoxes() {
+        java.util.List<int[]> deadlocks = new java.util.ArrayList<>();
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                if (map[y][x] == 2 && isCornerDeadlock(x, y)) {
+                    deadlocks.add(new int[]{x, y});
+                }
+            }
+        }
+        return deadlocks.toArray(new int[0][]);
+    }
 }
