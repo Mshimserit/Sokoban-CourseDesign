@@ -159,8 +159,8 @@ public class GameEngine {
             elapsedTime = System.currentTimeMillis() - startTime;
         }
 
-        // 检查是否出现死局（仅在推箱子后检测）
-        if (pushingBox && gameMap.isDeadlock()) {
+        // 检查刚推动的箱子是否进入角落死局
+        if (pushingBox && gameMap.isCornerDeadlock(boxNewX, boxNewY)) {
             deadlockDetected = true;
         }
 

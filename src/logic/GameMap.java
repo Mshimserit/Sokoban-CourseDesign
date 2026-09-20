@@ -12,17 +12,18 @@ package logic;
  * 6 - 玩家在目的地上
  */
 public class GameMap {
-    private int[][] map;           // 地图数据
-    private int width;             // 地图宽度
-    private int height;            // 地图高度
-    private int playerX;           // 玩家X坐标
-    private int playerY;           // 玩家Y坐标
-    private int boxCount;          // 箱子总数
-    private int targetCount;       // 目的地总数
+    private int[][] map; // 地图数据
+    private int width; // 地图宽度
+    private int height; // 地图高度
+    private int playerX; // 玩家X坐标
+    private int playerY; // 玩家Y坐标
+    private int boxCount; // 箱子总数
+    private int targetCount; // 目的地总数
 
     /**
      * 构造函数，创建指定大小的空地图
-     * @param width 地图宽度
+     * 
+     * @param width  地图宽度
      * @param height 地图高度
      */
     public GameMap(int width, int height) {
@@ -35,6 +36,7 @@ public class GameMap {
 
     /**
      * 构造函数，从已有地图数据创建
+     * 
      * @param map 地图数据
      */
     public GameMap(int[][] map) {
@@ -78,6 +80,7 @@ public class GameMap {
 
     /**
      * 获取指定位置的地图元素
+     * 
      * @param x X坐标
      * @param y Y坐标
      * @return 地图元素值
@@ -91,8 +94,9 @@ public class GameMap {
 
     /**
      * 设置指定位置的地图元素
-     * @param x X坐标
-     * @param y Y坐标
+     * 
+     * @param x     X坐标
+     * @param y     Y坐标
      * @param value 元素值
      */
     public void setElement(int x, int y, int value) {
@@ -103,6 +107,7 @@ public class GameMap {
 
     /**
      * 检查指定位置是否可通行
+     * 
      * @param x X坐标
      * @param y Y坐标
      * @return 是否可通行
@@ -114,6 +119,7 @@ public class GameMap {
 
     /**
      * 检查是否所有箱子都在目的地上
+     * 
      * @return 是否完成
      */
     public boolean isCompleted() {
@@ -130,6 +136,7 @@ public class GameMap {
 
     /**
      * 获取地图数据的深拷贝
+     * 
      * @return 地图数据副本
      */
     public int[][] getMapCopy() {
@@ -141,15 +148,33 @@ public class GameMap {
     }
 
     // Getters
-    public int getWidth() { return width; }
-    public int getHeight() { return height; }
-    public int getPlayerX() { return playerX; }
-    public int getPlayerY() { return playerY; }
-    public int getBoxCount() { return boxCount; }
-    public int getTargetCount() { return targetCount; }
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public int getPlayerX() {
+        return playerX;
+    }
+
+    public int getPlayerY() {
+        return playerY;
+    }
+
+    public int getBoxCount() {
+        return boxCount;
+    }
+
+    public int getTargetCount() {
+        return targetCount;
+    }
 
     /**
      * 设置玩家位置
+     * 
      * @param x X坐标
      * @param y Y坐标
      */
@@ -166,16 +191,17 @@ public class GameMap {
     }
 
     /**
-     * 检测是否存在死局（箱子被推到角落且不在目标点上）
-     * 死局定义：箱子在角落（至少两个相邻方向是墙）且不在目的地上
+     * 检测是否存在死局（箱子被推到角落）
+     * 死局定义：箱子在角落（至少两个相邻方向是墙）
+     * 
      * @return 是否存在死局
      */
     public boolean isDeadlock() {
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
                 int element = map[y][x];
-                // 只检查普通箱子（2），箱子在目的地（5）不算死局
-                if (element == 2) {
+                // 检查普通箱子（2）和箱子在目的地（5）
+                if (element == 2 || element == 5) {
                     if (isCornerDeadlock(x, y)) {
                         return true;
                     }
@@ -188,11 +214,12 @@ public class GameMap {
     /**
      * 检查指定位置是否是角落死局
      * 角落定义：至少有两个相邻方向（上下或左右）被墙封死
+     * 
      * @param x X坐标
      * @param y Y坐标
      * @return 是否是角落死局
      */
-    private boolean isCornerDeadlock(int x, int y) {
+    public boolean isCornerDeadlock(int x, int y) {
         boolean wallUp = getElement(x, y - 1) == 1;
         boolean wallDown = getElement(x, y + 1) == 1;
         boolean wallLeft = getElement(x - 1, y) == 1;
@@ -200,11 +227,12 @@ public class GameMap {
 
         // 角落：上下+左 或 上下+右 或 左右+上 或 左右+下
         return (wallUp && wallLeft) || (wallUp && wallRight) ||
-               (wallDown && wallLeft) || (wallDown && wallRight);
+                (wallDown && wallLeft) || (wallDown && wallRight);
     }
 
     /**
      * 获取死局箱子的位置列表（用于调试或高亮显示）
+     * 
      * @return 死局箱子位置数组，每个元素为 [x, y]
      */
     public int[][] getDeadlockBoxes() {
@@ -212,7 +240,7 @@ public class GameMap {
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
                 if (map[y][x] == 2 && isCornerDeadlock(x, y)) {
-                    deadlocks.add(new int[]{x, y});
+                    deadlocks.add(new int[] { x, y });
                 }
             }
         }
