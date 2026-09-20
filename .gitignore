@@ -10,3 +10,16 @@ Thumbs.db
 
 # 运行临时文件
 *.log
+
+# 编译输出
+classes/
+test-classes/
+*.class
+
+prd.md
+
+# 运行时数据
+scores/
+
+# 生成文档
+doc/api/
