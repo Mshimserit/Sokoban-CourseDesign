@@ -16,6 +16,9 @@ classes/
 test-classes/
 *.class
 
+# 打包产物
+*.jar
+
 prd.md
 
 # 运行时数据
